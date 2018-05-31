@@ -2,7 +2,7 @@
 
 - apresentar a quantidade de emprestimos por ano e filtrar por ano
 - mostrar numero de ocupações por situação do emprego (empregado, desempregado, etc) e tempo que está nessa situação (focar nos mais interessantes) filtrar por Estado e casa propria
-- mostrar numero de ocupações por motivo do emprestimo e tempo do emprestimo e filtro por tipo de emprestimo
+- mostrar ocupações e objetivo do emprestimo e por  tempo do emprestimo e filtro por tipo de emprestimo, por tempo do emprestimo e estado do emprestimo
 - criar dois grupos, um dos bons pagadores e outro dos maus pagadores:
     - Destes dois grupos, criar dois grupos: pre_jul_2009 e pos_jul_2009    
         - usar o dado de risco (ProsperScore) para pos_jul_2009 e CreditGrade para pre_jul_2009
@@ -15,6 +15,9 @@ Historia
 - Design: explique as escolhas de design que você fez, incluindo mudanças na visualização após a coleta de feedback
 - Comentários: inclua todos os comentários que outras pessoas fizeram sobre sua visualização, desde o primeiro esboço até a visualização final
 - Recursos: liste todas as fontes consultadas para criar a visualização
+
+notebook - project - a quem fazer emprestimos
+Demonstrativo sobre dois grupos, 'bons para realizar emprestimos' e 'maus para realizar emprestimos'. Podemos visualizar quais ocupações por objetivo e agrupa-los nos dois grupos citados observando o estado do emprestimo. Com esta informação podemos investir mais no grupo de 'maus para realizar emprestimos' e auxilia-los a se tornarem 'bons paa realizar emprestimos'.   
 
 
 Tratar os dados antes de usar no tableau
