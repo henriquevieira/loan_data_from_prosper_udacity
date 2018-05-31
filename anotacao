@@ -19,7 +19,8 @@ Historia
 
 Tratar os dados antes de usar no tableau
 corrigir:
-- ProsperScore para valor numerico (o tableau esta reconhecendo como string)
+- ProsperScore para valor numerico (o tableau esta reconhecendo como string) e trocar NA por None
+- CreditGrade trocar Empty por None
 - ListingCategory para os valores em string (está como numerico)
 
 Tratando os dados
@@ -27,6 +28,13 @@ Tratando os dados
 converter:
 - ListingCreationDate para date
 - ClosedDate para date
+
+
+
+
+
+
+
 
 
 
