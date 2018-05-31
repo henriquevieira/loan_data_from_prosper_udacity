@@ -1,8 +1,24 @@
 - A quem emprestar (pergunta)
 
-- apresentar a relação dos emprestimos por algo (ainda não sei)
-- mostrar numero de ocupações por motivo do emprestimo e tempo do emprestimo e filtrar por tipo de emprestimo
+- apresentar a quantidade de emprestimos por ano e filtrar por ano
 - mostrar numero de ocupações por situação do emprego (empregado, desempregado, etc) e tempo que está nessa situação (focar nos mais interessantes) filtrar por Estado e casa propria
-- criar um grupo com os mais interessantes:
-    usar o dado de risco (ProsperScore)
+- mostrar numero de ocupações por motivo do emprestimo e tempo do emprestimo e filtro por tipo de emprestimo
+- criar dois grupos, um dos bons pagadores e outro dos maus pagadores:
+    - Destes dois grupos, criar dois grupos: pre_jul_2009 e pos_jul_2009    
+        - usar o dado de risco (ProsperScore) para pos_jul_2009 e CreditGrade para pre_jul_2009
+        - usar o valor de MonthlyLoanPayment (valor mensal pago)
+
+
+Historia
+
+- Resumo: em não mais de quatro frases, faça uma breve apresentação de sua visualização de dados e adicione qualquer contexto que possa ajudar os leitores a entendê-la
+- Design: explique as escolhas de design que você fez, incluindo mudanças na visualização após a coleta de feedback
+- Comentários: inclua todos os comentários que outras pessoas fizeram sobre sua visualização, desde o primeiro esboço até a visualização final
+- Recursos: liste todas as fontes consultadas para criar a visualização
+
+
+
+
+
+
 
