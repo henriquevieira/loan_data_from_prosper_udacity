@@ -17,7 +17,16 @@ Historia
 - Recursos: liste todas as fontes consultadas para criar a visualização
 
 
+Tratar os dados antes de usar no tableau
+corrigir:
+- ProsperScore para valor numerico (o tableau esta reconhecendo como string)
+- ListingCategory para os valores em string (está como numerico)
 
+Tratando os dados
+
+converter:
+- ListingCreationDate para date
+- ClosedDate para date
 
 
 
