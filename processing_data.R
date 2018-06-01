@@ -3,7 +3,7 @@
 # load packages
 library(dplyr)
 
-data_sample <- read.csv('prosperLoanData_5000sample.csv')
+data_sample <- read.csv('prosperLoanData.csv')
 
 str(data_sample)
 
@@ -78,5 +78,5 @@ data_sample$pos_july_2009 <- data_sample$CreditGrade == 'None'
 
 str(data_sample)
 
-write.table(data_sample, "prosperLoanData_5000sample_edited.csv", 
+write.table(data_sample, "prosperLoanData_edited.csv", 
            sep="\t", quote=FALSE, row.names=FALSE)
