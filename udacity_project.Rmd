@@ -2,29 +2,191 @@
 title: "Como identificar o inadimplemente para então buscarmos soluções?"
 author: "Henrique C Vieira"
 date: "June 9, 2018"
-output: html_document
+output:
+  pdf_document: default
+  html_document: default
 ---
 
 ```{r setup, include=FALSE}
 knitr::opts_chunk$set(echo = TRUE)
 ```
 
+```{r}
+library(dplyr, warn.conflicts = FALSE, verbose = FALSE)
+library(readr, warn.conflicts = FALSE, verbose = FALSE)
+library(tidyr, warn.conflicts = FALSE, verbose = FALSE)
+library(lubridate, warn.conflicts = FALSE, verbose = FALSE)
+library(ggplot2)
+```
+
+```{r}
+dataset <- read_delim("prosperLoanData_edited.csv", delim = "\t")
+# glimpse(dataset)
+```
+
+Corrigir o tipo dos dados
+```{r}
+# Factor
+dataset$CreditGrade <- as.factor(dataset$CreditGrade)
+dataset$Term <- as.factor(dataset$Term)
+dataset$LoanStatus <- as.factor(dataset$LoanStatus)
+dataset$ProsperScore <- as.factor(dataset$ProsperScore)
+dataset$BorrowerState <- as.factor(dataset$BorrowerState)
+dataset$Occupation <- as.factor(dataset$Occupation)
+dataset$EmploymentStatus <- as.factor(dataset$EmploymentStatus)
+dataset$IsBorrowerHomeowner <- as.factor(dataset$IsBorrowerHomeowner)
+dataset$IncomeRange <- as.factor(dataset$IncomeRange)
+dataset$ListingCategory <- as.factor(dataset$ListingCategory)
+# glimpse(dataset)
+```
+
+Criando as colunas de mês e ano para data de criação do emprestimo e para a data de fechamento do emprestimo
+```{r}
+dataset$ListingCreationDate_month <- month(dataset$ListingCreationDate, label = TRUE)
+dataset$ListingCreationDate_year <- year(dataset$ListingCreationDate)
+dataset$ClosedDate_month <- month(dataset$ClosedDate, label = TRUE)
+dataset$ClosedDate_year <- year(dataset$ClosedDate)
+```
+
+Reduzindo as opções de situação profissional para quatro.
+
+- Employed
+- Not employed
+- Other
+- NA
+
+```{r}
+dataset$EmploymentStatus4 <- rep(NA, nrow(dataset))
+dataset$EmploymentStatus4[dataset$EmploymentStatus == 'Employed'] <- 'Employed'
+dataset$EmploymentStatus4[dataset$EmploymentStatus == 'Full-time'] <- 'Employed'
+dataset$EmploymentStatus4[dataset$EmploymentStatus == 'Part-time'] <- 'Employed'
+dataset$EmploymentStatus4[dataset$EmploymentStatus == 'Self-employed'] <- 'Employed'
+
+dataset$EmploymentStatus4[dataset$EmploymentStatus == 'Not employed'] <- 'Not employed'
+
+dataset$EmploymentStatus4[dataset$EmploymentStatus == 'Other'] <- 'Other'
+dataset$EmploymentStatus4[dataset$EmploymentStatus == 'Not available'] <- 'Other'
+dataset$EmploymentStatus4[dataset$EmploymentStatus == 'Retired'] <- 'Other'
+dataset$EmploymentStatus4 <- as.factor(dataset$EmploymentStatus4)
+```
+
+Juntando defaulted com chargedoff
+```{r}
+dataset$LoanStatus2 <- dataset$LoanStatus
+dataset$LoanStatus2[dataset$LoanStatus2 == 'Chargedoff'] <- 'Defaulted'
+```
+
+
 ## slide 1
-Temo uma tendência de crescimento no número de empréstimos contabilizados entre 2005 ao primeiro quadrimestre de 2014, então como podemos garantir que estes empréstimos serão quitados?
+Temos uma tendência de crescimento no número de empréstimos contabilizados entre 2005 ao primeiro quadrimestre de 2014, então como podemos garantir que estes empréstimos serão quitados?
+
+```{r}
+ggplot(dataset, aes(x=ListingCreationDate_year, fill=ListingCreationDate_month)) + 
+  geom_bar(position = "dodge") +
+  theme(axis.text.x = element_text(angle = 45, hjust = 1))
+```
+
 
 ## slide 2
 Este é o perfils das pessoas que solicitaram o empréstimo entre 2005 a 2014.
 
+### Localidade
+```{r}
+# BorrowerState
+# Occupation
+# EmploymentStatus
+# EmploymentStatusDuration
+# IsBorrowerHomeowner
+# IncomeRange
+
+ggplot(dataset, aes(x=BorrowerState)) +
+  geom_bar() +
+  theme(axis.text.x = element_text(angle = 90, hjust = 1))
+```
+
+### Ocupação e situação profissional
+
+```{r}
+# Occupation
+# EmploymentStatus
+dataset %>%
+  ggplot(aes(x=Occupation, fill=EmploymentStatus4)) +
+  geom_bar() +
+  theme(axis.text.x = element_text(angle = 90, hjust = 1))
+```
+
+### tempo em que está nessa ocupação desde a solicitação do emprestimo
+
+```{r}
+dataset %>%
+  filter(EmploymentStatus4 == 'Employed') %>%
+  ggplot(aes(x=Occupation, EmploymentStatusDuration)) +
+  geom_boxplot() +
+  theme(axis.text.x = element_text(angle = 90, hjust = 1))
+```
+
+```{r}
+dataset %>%
+  filter(EmploymentStatus4 == 'Not employed') %>%
+  ggplot(aes(x=Occupation, EmploymentStatusDuration)) +
+  geom_boxplot() +
+  theme(axis.text.x = element_text(angle = 90, hjust = 1))
+```
+
+### Casa própria
+
+```{r}
+ggplot(dataset, aes(x=EmploymentStatus4, fill=IsBorrowerHomeowner)) +
+  geom_bar() +
+  theme(axis.text.x = element_text(angle = 45, hjust = 1))
+```
+
+### Renda - empregado
+
+```{r}
+dataset %>%
+  filter(EmploymentStatus4 == 'Employed' | EmploymentStatus4 == 'Other') %>%
+  ggplot(aes(x=IncomeRange, fill=EmploymentStatus4)) +
+  geom_bar() +
+  theme(axis.text.x = element_text(angle = 45, hjust = 1))
+```
+
 ## slide 3
 Destas pessoas, quais quitaram e quais se tornaram inadimplentes para atender seus objetivos para o qual solicitaram o empréstimo?
+
+```{r}
+dataset %>%
+  filter(LoanStatus2 == 'Completed' | LoanStatus2 == 'Defaulted') %>%
+  ggplot(aes(x=EmploymentStatus4, fill=LoanStatus2)) +
+  geom_bar()
+```
 
 ## slide 4
 Podemos observar painel abaixo os emprestimos que foram fechados por inadimplência e sua relação com a nota de risco (a nota de risco foi alterada após julho de 2009)
 
 ## slide 5
-Observado qual o perfil dos inadimplentes, podemos então analisar a sua distribuição. Neste grafico podesmos ver que houve uma queda, mas teve uma nova tendendia de crescimento da inadimplência.
+Observado qual o perfil dos inadimplentes, podemos então analisar a sua distribuição. Neste grafico podemos ver que houve uma queda, mas teve uma nova tendência de crescimento da inadimplência.
+
+```{r}
+dataset %>%
+  filter(LoanStatus2 == 'Defaulted') %>%
+  group_by(ClosedDate_year) %>%
+  count(LoanStatus2) %>%
+  ggplot(aes(x=ClosedDate_year, y=n)) + 
+  geom_line() +
+  facet_grid(LoanStatus2 ~ .)
+```
+
 
 ## slide 6
 Uma vez que identificamos o perfil e detectamos um crescimento da inadimplência, devemos encontrar incentivos que tornem esses maus clientes em bons clientes. A boa notícia é que vemos abaixo o crescimento no número de bons pagadores, mas podemos melhorar ainda mais.
 
-
+```{r}
+dataset %>%
+  filter(LoanStatus2 == 'Completed') %>%
+  group_by(ClosedDate_year) %>%
+  count(LoanStatus2) %>%
+  ggplot(aes(x=ClosedDate_year, y=n)) + 
+  geom_line() +
+  facet_grid(LoanStatus2 ~ .)
+```
