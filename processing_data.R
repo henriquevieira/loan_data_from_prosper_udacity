@@ -3,7 +3,7 @@
 # load packages
 library(dplyr)
 
-data_sample <- read.csv('prosperLoanData_5000sample.csv')
+data_sample <- read.csv('prosperLoanData.csv')
 
 str(data_sample)
 
@@ -15,6 +15,10 @@ head(data_sample$ProsperScore, 25)
 data_sample$CreditGrade <- as.character(data_sample$CreditGrade)
 data_sample$CreditGrade[data_sample$CreditGrade == ''] <- 'None'
 head(data_sample$CreditGrade, 25)
+
+# turn Empty to None in Occupation
+data_sample$Occupation <- as.character(data_sample$Occupation)
+data_sample$Occupation[data_sample$Occupation == ''] <- 'None'
 
 # Check data_sample$ListingCategory..numeric. 
 head(data_sample$ListingCategory..numeric., 25)
@@ -78,5 +82,9 @@ data_sample$pos_july_2009 <- data_sample$CreditGrade == 'None'
 
 str(data_sample)
 
-write.table(data_sample, "prosperLoanData_5000sample_edited.csv", 
-           sep="\t", quote=FALSE, row.names=FALSE)
+data_sample %>%
+  count(Occupation, sort = TRUE)
+
+
+# write.table(data_sample, "prosperLoanData_edited.csv", 
+#            sep="\t", quote=FALSE, row.names=FALSE)
